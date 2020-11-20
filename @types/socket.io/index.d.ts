@@ -1,11 +1,10 @@
 import Usuario from "@models/usuario";
 
 declare global {
-    namespace Express {
-        interface Request {
-            id: string,
+    namespace SocketIO{
+        interface Socket{
             user: Usuario,
-            files: any
+            id: string,
         }
     }
 }

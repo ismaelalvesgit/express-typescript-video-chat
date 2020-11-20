@@ -72,7 +72,7 @@
     "response-time": "^2.3.2",
     "rimraf": "^3.0.2",
     "shelljs": "^0.8.4",
-    "socket.io": "^3.0.1",
+    "socket.io": "^2.3.0",
     "speedtest-net": "^2.1.1",
     "typeorm": "^0.2.29",
     "uuid": "^8.3.1",

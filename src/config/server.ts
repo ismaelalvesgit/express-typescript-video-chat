@@ -25,6 +25,7 @@ import xssFilter from 'x-xss-protection'
 import throttlingResquestMiddleware from '@middlewares/throttlingResquestMiddleware'
 import assignResquestMiddleware from '@middlewares/assignResquestMiddleware'
 import handlerErroMiddleware from '@middlewares/handlerErroMiddleware'
+import socketIO from 'socket.io'
 
 class App {
 
@@ -38,13 +39,10 @@ class App {
         this.cpus = cpus();
         this.app = express(); 
         this.server = http.createServer(this.app);
-        this.io = require('socket.io')(this.server, {
+        this.io = socketIO(this.server, {
             origins: "*:*"
         })
-        this.io.on('connection', (socket)=>{
-            console.log(socket)
-        })
-
+        
         // engine view
         this.app.set('view engine', 'ejs');
         this.app.set('views', './src/views');
