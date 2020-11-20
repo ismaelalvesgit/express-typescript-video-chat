@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --runInBand --verbose",
+    "test": "jest --runInBand --verbose",
+    "test:watch": "jest --watchAll --runInBand --verbose",
     "start": "npx ts-node -r tsconfig-paths/register ./src/index.ts",
     "dev": "nodemon",
     "lint": "tslint -p tsconfig.json -c tslint.json",
