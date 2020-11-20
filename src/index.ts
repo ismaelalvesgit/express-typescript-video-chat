@@ -2,13 +2,13 @@ import 'dotenv/config';
 import "reflect-metadata";
 import validateEnv from './utils/validateEnv';
 import App from './config/server';
-import MainController from './controllers/main.controller';
+import AuthController from './controllers/auth.controller';
 import SystemController from './controllers/system.controller';
 import UsuarioController from './controllers/usuario.controller';
 
 validateEnv();
 const app = new App([
-  new MainController(),
+  new AuthController(),
   new SystemController(),
   new UsuarioController(),
 ]);

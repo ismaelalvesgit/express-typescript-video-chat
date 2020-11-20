@@ -43,7 +43,7 @@
 				<% } %>
 				<%if (action == 'alter') { %>	
 					<span class="text-center text-capitalize">Olá <%=data.nome%> pronto para alterar sua senha :)</span>
-					<form class="login100-form validate-form" action="<%=url%>/altera-senha/<%=data.reset%>" method="POST">
+					<form class="login100-form validate-form" action="<%=post%>" method="POST">
 						<span class="login100-form-title p-b-49">
 							Reset Senha
 						</span>

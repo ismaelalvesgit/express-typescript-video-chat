@@ -4,6 +4,7 @@ import ejs from 'ejs'
 import Usuario from '@models/usuario'
 import env from '@config/env'
 import Mail from 'nodemailer/lib/mailer'
+import { Request } from 'express'
 
 
 // camada de transporte
@@ -51,6 +52,9 @@ try {
 
 class ServiceEmail{
     
+    forceBruteAcesso(req:Request){
+        console.log(req)
+    }
 
     bemVindo(user:Usuario){
         return this.send(user.email, "bem-vindo", "bem-vindo", user)

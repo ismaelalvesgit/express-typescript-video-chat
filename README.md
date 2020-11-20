@@ -50,6 +50,12 @@ Ferramentas utlizadas:
 * Uuid
 * X-xss Protection
 
+## Screenshots
+
+app view:
+
+<img src="https://raw.githubusercontent.com/ismaelalvesgit/express-typescript-video-chat/master/app.png" width="800">
+
 ## Local Enviroment
 
 ### Setup
