@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+<head>
+	<title>Reset Senha</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="<%=url%>/assets/images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/css/util.css">
+	<link rel="stylesheet" type="text/css" href="<%=url%>/assets/css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>	
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url('<%=url%>/assets/images/bg-01.jpg');">
+			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+				<%if (action == 'sucess') { %>
+					<span class="login100-form-title p-b-49">
+						Sua senha foi alterada com sucesso :)
+					</span>
+				<% } %>
+				<%if (action == 'not-found') { %>
+					<span class="login100-form-title p-b-49">
+						Link Não está mais ativo :(
+					</span>
+				<% } %>
+				<%if (action == 'alter') { %>	
+					<span class="text-center text-capitalize">Olá <%=data.nome%> pronto para alterar sua senha :)</span>
+					<form class="login100-form validate-form" action="<%=url%>/altera-senha/<%=data.reset%>" method="POST">
+						<span class="login100-form-title p-b-49">
+							Reset Senha
+						</span>
+						<div class="wrap-input100 validate-input" data-validate="Senha e requirida">
+							<span class="label-input100">Senha</span>
+							<input class="input100" type="password" name="senha" placeholder="Digite sua nova senha">
+							<span class="focus-input100" data-symbol="&#xf190;"></span>
+						</div>
+						<div class="container-login100-form-btn mt-3">
+							<div class="wrap-login100-form-btn">
+								<div class="login100-form-bgbtn"></div>
+								<button type="submit" class="login100-form-btn">
+									Alterar
+								</button>
+							</div>
+						</div>
+						<div class="flex-c-m mt-3">
+							<a href="#" class="login100-social-item bg1">
+								<i class="fa fa-facebook"></i>
+							</a>
+							<a href="#" class="login100-social-item bg2">
+								<i class="fa fa-twitter"></i>
+							</a>
+							<a href="#" class="login100-social-item bg3">
+								<i class="fa fa-google"></i>
+							</a>
+						</div>
+					</form>
+				<% } %>
+			</div>
+		</div>
+	</div>
+	<div id="dropDownSelect1"></div>
+</body>
+<!--===============================================================================================-->
+	<script src="<%=url%>/assets/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="<%=url%>/assets/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="<%=url%>/assets/vendor/bootstrap/js/popper.js"></script>
+	<script src="<%=url%>/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="<%=url%>/assets/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="<%=url%>/assets/vendor/daterangepicker/moment.min.js"></script>
+	<script src="<%=url%>/assets/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="<%=url%>/assets/vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="<%=url%>/assets/js/main.js"></script>
+</html>
