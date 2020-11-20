@@ -25,8 +25,6 @@ import xssFilter from 'x-xss-protection'
 import throttlingResquestMiddleware from '@middlewares/throttlingResquestMiddleware'
 import assignResquestMiddleware from '@middlewares/assignResquestMiddleware'
 import handlerErroMiddleware from '@middlewares/handlerErroMiddleware'
-import socketIo from 'socket.io';
-const SocketIO = require('socket.io')
 
 class App {
 
@@ -34,16 +32,19 @@ class App {
     public app: express.Application;
     public cpus: CpuInfo[]
     public retryConnectionDatabase:number = 1
-    public io: socketIo.Server;
+    public io: SocketIO.Server;
 
     constructor(controllers: Controller[]) {
         this.cpus = cpus();
-        this.app = express();
+        this.app = express(); 
         this.server = http.createServer(this.app);
-        this.io = SocketIO(this.server, {
-            origins: "*:*",
-        });
-        this.io.on('connection', (socket)=> console.log(socket))
+        this.io = require('socket.io')(this.server, {
+            origins: "*:*"
+        })
+        this.io.on('connection', (socket)=>{
+            console.log(socket)
+        })
+
         // engine view
         this.app.set('view engine', 'ejs');
         this.app.set('views', './src/views');

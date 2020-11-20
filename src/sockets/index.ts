@@ -1,3 +1,4 @@
+import { Socket } from 'socket.io';
 import app from '../index'
 import clientNameSpace from './namespaces/client.nameSpace';
 
@@ -11,4 +12,3 @@ io.on('connection', (socket)=>{
     console.log(socket)
     clientNameSpace.connection(socket)
 })
-

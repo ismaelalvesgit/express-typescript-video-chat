@@ -1,9 +1,8 @@
-import { Socket } from 'socket.io'
 import app from '../../index'
 
 class ClientNameSpace {
     
-    connection(socket: Socket){
+    connection(socket: SocketIO.Socket){
         app.io.emit('evento', {teste:"ok"}) 
     }
 }
