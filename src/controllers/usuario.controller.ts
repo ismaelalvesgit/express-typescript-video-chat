@@ -5,6 +5,7 @@ import Usuario from '@models/usuario';
 import controllerBase from '@utils/controllerBase';
 import mail from '@utils/mail'
 import Upload from '@models/upload';
+import authorize from '@middlewares/handlerAuthorizeMiddleware';
 
 class UsuarioController implements Controller {
 
@@ -17,7 +18,7 @@ class UsuarioController implements Controller {
 
   private initializeRoutes() {
     // Metodo que realiza os cadastro de usuários
-    this.router.post(`${this.path}`, 
+    this.router.post(`${this.path}`,
       controllerBase.save({
         model: Usuario,
         beforeSave:  async (data)=>{
@@ -45,7 +46,8 @@ class UsuarioController implements Controller {
     );
 
     // Metodo que realiza os atualização de usuários
-    this.router.put(`${this.path}/:id`, 
+    this.router.put(`${this.path}`,
+      authorize(),  
       controllerBase.update({
         model: Usuario,
         beforeUpdate: async (data)=>{
@@ -56,6 +58,12 @@ class UsuarioController implements Controller {
         },
         excludeFields: [
           "reset"
+        ],
+        params: [
+          {
+            user: true,
+            path: "id"
+          }
         ],
         file: {
           files: [
@@ -70,7 +78,8 @@ class UsuarioController implements Controller {
     );
 
     // Metodo que realiza os deletação de usuários
-    this.router.delete(`${this.path}/:id`, 
+    this.router.delete(`${this.path}`, 
+      authorize(),
       controllerBase.delete({
         model: Usuario,
         beforeDelete: async(data)=>{
@@ -80,6 +89,12 @@ class UsuarioController implements Controller {
         afterDelete: (data, req)=>{
           // Enviar email de deletação de conta
         },
+        params: [
+          {
+            user: true,
+            path: "id"
+          }
+        ],
         files: [
           {
             path: "usuario/"

@@ -26,14 +26,16 @@ import throttlingResquestMiddleware from '@middlewares/throttlingResquestMiddlew
 import assignResquestMiddleware from '@middlewares/assignResquestMiddleware'
 import handlerErroMiddleware from '@middlewares/handlerErroMiddleware'
 import socketIO from 'socket.io'
+import Usuario from '@models/usuario';
 
 class App {
 
     public server: Server;
     public app: express.Application;
     public cpus: CpuInfo[]
-    public retryConnectionDatabase:number = 1
     public io: SocketIO.Server;
+    public retryConnectionDatabase:number = 1
+    public usersSocket: Array<Usuario> = []
 
     constructor(controllers: Controller[]) {
         this.cpus = cpus();

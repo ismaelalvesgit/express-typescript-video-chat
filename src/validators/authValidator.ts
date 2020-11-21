@@ -1,8 +1,9 @@
+//@Author ismael alves
 import { body } from 'express-validator'
 
-class TesteValidator{
+class AuthValidator{
 
-    test(){
+    loginValidator(){
         return [
             body('senha')
                 .notEmpty().withMessage('senha e requirida')
@@ -13,6 +14,13 @@ class TesteValidator{
         ]
     }
 
+    resetSenhaValidator(){
+        return [
+            body('email')
+                .isEmail().withMessage('email necesita ser valido :)')
+                .notEmpty().withMessage('email e requirido')
+        ]
+    }
 }
 
-export default new TesteValidator()
+export default new AuthValidator()

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { NextFunction, Router, Request, Response } from 'express';
 import Controller from '@interfaces/controller.Interface';
 import { RateLimiterMemory } from 'rate-limiter-flexible'
 import Usuario from '@models/usuario';
@@ -6,6 +6,8 @@ import utils from '@utils/utils';
 import mail from '@utils/mail';
 import { getRepository } from 'typeorm';
 import env from '@config/env';
+import authValidator from '@validators/authValidator';
+import verifiyHandlerMiddleware from '@middlewares/verifiyHandlerMiddleware';
 
 const maxPorMinutoResetSenha = 3
 const maxPorMinutoLogin = 6
@@ -69,7 +71,9 @@ class AuthController implements Controller {
     )
 
     this.router.post(`${this.path}/email/reset-senha`,
-      async (req, resp, next) => {
+      authValidator.resetSenhaValidator(),
+      verifiyHandlerMiddleware,
+      async (req:Request, res:Response, next: NextFunction) => {
         const data = req.body
         const ipAddr = req.ip
         const resFastByIP = await limiterPorMinutoIPResetSenha.get(ipAddr)
@@ -92,7 +96,7 @@ class AuthController implements Controller {
                 Usuario.update({ id: doc.id }, { reset: rash }).then(() => {
                   doc.reset = env.server.url + `${req.originalUrl}/` + rash
                   mail.resetSenha(doc).then(() => {
-                    resp.json(`enviamos um email para ${doc.email}`)
+                    res.json(`enviamos um email para ${doc.email}`)
                   }).catch(next)
                 })
               } else {
@@ -116,7 +120,9 @@ class AuthController implements Controller {
     )
 
     this.router.post(`${this.path}/email/login`,
-      async (req, res, next) => {
+      authValidator.loginValidator(),
+      verifiyHandlerMiddleware,
+      async (req:Request, res:Response, next: NextFunction) => {
         const data = req.body
         const ipAddr = req.ip
         const [resFastByIP, resSlowByIP] = await Promise.all([

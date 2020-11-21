@@ -1,4 +1,3 @@
-import { Socket } from 'socket.io';
 import app from '../index'
 import realIp from './middlewares/realIpMiddleware';
 import user from './middlewares/userMiddleware';
