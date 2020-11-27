@@ -506,16 +506,14 @@ class ControllerBase{
                     // Salvando os dados
                     option.model.insert(req.body).then(async(save:any)=>{
                         const id = save.identifiers[0].id
-                        if(option.file && option.file.typeUpload != null){
+                        if(option.file && option.file.typeUpload != null && req.files && Object.keys(req.files).length > 0){
                             // Salvando os dados com arquivos da requisição
                             switch (option.file.typeUpload){
                                 case 'single':
                                     const file = option.file.files[0]
                                     // Verificando se o field existe ou se esta vázio
                                     let field = true
-                                    if(!req.files[file.field]){
-                                        field = false
-                                    }else{
+                                    if(req.files[file.field]){
                                         if(Array.isArray(req.files[file.field])){
                                             req.files[file.field].forEach((itens:any)=>{
                                                 if(itens.size <= 0){
@@ -528,6 +526,8 @@ class ControllerBase{
                                                 field = false
                                             }
                                         }
+                                    }else{
+                                        field = false
                                     }
                                     if(field){
                                         if(Array.isArray(req.files[file.field])){

@@ -6,6 +6,8 @@ import controllerBase from '@utils/controllerBase';
 import mail from '@utils/mail'
 import Upload from '@models/upload';
 import authorize from '@middlewares/handlerAuthorizeMiddleware';
+import usuarioValidator from '@validators/usuarioValidator';
+import verifiyHandlerMiddleware from '@middlewares/verifiyHandlerMiddleware';
 
 class UsuarioController implements Controller {
 
@@ -19,6 +21,8 @@ class UsuarioController implements Controller {
   private initializeRoutes() {
     // Metodo que realiza os cadastro de usuários
     this.router.post(`${this.path}`,
+      usuarioValidator.usuarioCadastro(),
+      verifiyHandlerMiddleware,
       controllerBase.save({
         model: Usuario,
         beforeSave:  async (data)=>{
@@ -48,6 +52,8 @@ class UsuarioController implements Controller {
     // Metodo que realiza os atualização de usuários
     this.router.put(`${this.path}`,
       authorize(),  
+      usuarioValidator.usuarioEditar(),
+      verifiyHandlerMiddleware,
       controllerBase.update({
         model: Usuario,
         beforeUpdate: async (data)=>{

@@ -83,8 +83,9 @@ class ServiceEmail{
             data = {
                 id: idReq,
                 error: error,
+                usuario: {}
             }
-            this.send(email, "Erro Events", "error.html", data)
+            this.send(email, "Erro Events", "error", data)
         }
     }
 

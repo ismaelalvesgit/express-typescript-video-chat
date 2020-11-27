@@ -9,7 +9,7 @@ import fs from 'fs';
 import { format } from 'date-fns';
 import utils from '@utils/utils';
 import { requestCounters, responseCounters, injectMetricsRoute, startCollection } from '@utils/metric';
-import { createConnection, getConnection, getManager } from "typeorm";
+import { createConnection, getConnection } from "typeorm";
 import path from 'path';
 import { cpus, CpuInfo } from 'os'
 import cluster from 'cluster'
@@ -164,7 +164,7 @@ class App {
             this.app.use(throttlingResquestMiddleware)
         }
         this.app.use((req, res, next) => {
-            if (this.retryConnectionDatabase > 0) {
+            if (this.retryConnectionDatabase > 1) {
                 res.status(502).json({nome: "Conection", mensagem: "Falha ao iniciar base de dados"})
             }else{
                 next()

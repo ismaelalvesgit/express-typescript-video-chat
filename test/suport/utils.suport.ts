@@ -1,12 +1,12 @@
 import utils from '../../src/utils/utils'
 
-class UtilsTest{
+class UtilsSuport{
 
-    deleteFolder(paths = []){
+    deleteFolder(paths: Array<string>){
         paths.forEach((path)=>{
             utils.deleteFolder(path)
         })
     }
 }
 
-export default new UtilsTest()
+export default new UtilsSuport()
