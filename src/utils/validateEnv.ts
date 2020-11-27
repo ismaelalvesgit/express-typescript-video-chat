@@ -1,3 +1,9 @@
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Function utilizada somente para validação das variaveis de ambientes obrigatórias
+ * @Callback exportação da Function validateEnv
+*/
 import { cleanEnv, port, str, num } from 'envalid';
 
 function validateEnv() {

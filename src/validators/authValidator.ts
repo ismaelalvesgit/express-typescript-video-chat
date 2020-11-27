@@ -1,9 +1,16 @@
-//@Author ismael alves
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class utilizada somente para validação de dados no controller auth utilizada 
+ * somente no arquivo localizado `@/controllers/auth.controller.ts`
+ * @Callback exportação da instancia AuthValidator
+*/
+
 import { body } from 'express-validator'
 
-class AuthValidator{
+class AuthValidator {
 
-    loginValidator(){
+    loginValidator() {
         return [
             body('senha')
                 .notEmpty().withMessage('senha e requirida')
@@ -14,7 +21,7 @@ class AuthValidator{
         ]
     }
 
-    resetSenhaValidator(){
+    resetSenhaValidator() {
         return [
             body('email')
                 .isEmail().withMessage('email necesita ser valido :)')

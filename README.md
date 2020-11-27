@@ -9,6 +9,7 @@ Ferramentas utlizadas:
 * Compression
 * Connect-multiparty
 * Cors
+* Cron
 * Date Fns
 * Dotenv
 * Ejs

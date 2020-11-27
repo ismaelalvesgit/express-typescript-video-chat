@@ -1,3 +1,9 @@
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class utilizada com rota da aplicação
+ * @Callback exportação da class UsuarioController
+*/
 import { Router } from 'express';
 import Controller from '@interfaces/controller.Interface';
 import utils from '@utils/utils';
@@ -19,14 +25,16 @@ class UsuarioController implements Controller {
   }
 
   private initializeRoutes() {
+
+
     // Metodo que realiza os cadastro de usuários
     this.router.post(`${this.path}`,
       usuarioValidator.usuarioCadastro(),
       verifiyHandlerMiddleware,
       controllerBase.save({
         model: Usuario,
-        beforeSave:  async (data)=>{
-          if(data.senha){
+        beforeSave: async (data) => {
+          if (data.senha) {
             data.senha = await utils.encrypt(data.senha)
           }
           return data
@@ -34,7 +42,7 @@ class UsuarioController implements Controller {
         excludeFields: [
           "reset"
         ],
-        afterSave: (data, req)=>{
+        afterSave: (data, req) => {
           mail.bemVindo(data)
         },
         file: {
@@ -51,13 +59,13 @@ class UsuarioController implements Controller {
 
     // Metodo que realiza os atualização de usuários
     this.router.put(`${this.path}`,
-      authorize(),  
+      authorize(),
       usuarioValidator.usuarioEditar(),
       verifiyHandlerMiddleware,
       controllerBase.update({
         model: Usuario,
-        beforeUpdate: async (data)=>{
-          if(data.senha){
+        beforeUpdate: async (data) => {
+          if (data.senha) {
             data.senha = await utils.encrypt(data.senha)
           }
           return data
@@ -84,15 +92,15 @@ class UsuarioController implements Controller {
     );
 
     // Metodo que realiza os deletação de usuários
-    this.router.delete(`${this.path}`, 
+    this.router.delete(`${this.path}`,
       authorize(),
       controllerBase.delete({
         model: Usuario,
-        beforeDelete: async(data)=>{
-          await Upload.delete({idObjeto: data.id})
+        beforeDelete: async (data) => {
+          await Upload.delete({ idObjeto: data.id })
           return data
         },
-        afterDelete: (data, req)=>{
+        afterDelete: (data, req) => {
           // Enviar email de deletação de conta
         },
         params: [
@@ -110,7 +118,7 @@ class UsuarioController implements Controller {
     );
 
     // Metodo que realiza os deletação de usuários
-    this.router.get(`${this.path}/:id`, 
+    this.router.get(`${this.path}/:id`,
       controllerBase.findById({
         model: Usuario,
         excludeFields: [
@@ -120,7 +128,7 @@ class UsuarioController implements Controller {
     );
 
     // Metodo que realiza os deletação de usuários
-    this.router.get(`${this.path}`, 
+    this.router.get(`${this.path}`,
       controllerBase.findAll({
         model: Usuario,
         excludeFields: [

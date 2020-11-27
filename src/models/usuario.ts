@@ -1,5 +1,12 @@
-import { Entity, Column, AfterInsert, BeforeInsert, BeforeUpdate, BeforeRemove } from "typeorm";
-import { IsEmail, IsNotEmpty, MinLength, IsISO8601, IsIn } from "class-validator"
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class utilizada como MODEL da entidade Usuario utilizada globalmente na aplicação 
+ * @Callback exportação da class Usuario
+*/
+
+import { Entity, Column, BeforeInsert, BeforeUpdate, BeforeRemove } from "typeorm";
+import { IsEmail, IsNotEmpty, MinLength, IsISO8601 } from "class-validator"
 import BaseModel from "./baseModel";
 import TipoUsuario from "@enum/TipoUsuario";
 import env from "@config/env";
@@ -15,11 +22,11 @@ function enumToArrayNumber(type: any): Array<number> {
 @Entity()
 class Usuario extends BaseModel {
 
-  constructor(init?: Partial<Usuario>){
+  constructor(init?: Partial<Usuario>) {
     super();
     Object.assign(this, init);
   }
-  
+
   @Column()
   @IsNotEmpty({
     message: "Nome e requerido"
@@ -37,7 +44,7 @@ class Usuario extends BaseModel {
   })
   email!: string
 
-  @Column({select: false})
+  @Column({ select: false })
   @IsNotEmpty({
     message: "Senha e requerida"
   })
@@ -55,12 +62,12 @@ class Usuario extends BaseModel {
   @Column({
     default: env.files.user
   })
-  foto!:string;
+  foto!: string;
 
   @Column({
     nullable: true
   })
-  reset!:string;
+  reset!: string;
 
   @Column()
   @IsISO8601({}, {
@@ -76,27 +83,27 @@ class Usuario extends BaseModel {
     return this
   }
 
-  fromJson(init?: Partial<Usuario>){
+  fromJson(init?: Partial<Usuario>) {
     Object.assign(this, init);
   }
 
   @BeforeInsert()
-  async BeforeInsert(){
-    if(this.senha){
+  async BeforeInsert() {
+    if (this.senha) {
       this.senha = await utils.encrypt(this.senha)
     }
   }
 
   @BeforeUpdate()
-  async BeforeUpdate(){
-    if(this.senha){
+  async BeforeUpdate() {
+    if (this.senha) {
       this.senha = await utils.encrypt(this.senha)
     }
   }
 
   @BeforeRemove()
-  async BeforeRemove(){
-    Upload.delete({idObjeto: this.id})
+  async BeforeRemove() {
+    Upload.delete({ idObjeto: this.id })
   }
 }
 

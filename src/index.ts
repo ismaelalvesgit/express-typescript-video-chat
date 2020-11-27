@@ -1,5 +1,13 @@
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class root da aplicação
+ * @Callback Instance class App 
+*/
+
 import 'dotenv/config';
-import "reflect-metadata";
+import 'reflect-metadata';
+import './CronJob';
 import validateEnv from './utils/validateEnv';
 import App from './config/server';
 import AuthController from './controllers/auth.controller';
@@ -13,7 +21,7 @@ const app = new App([
   new UsuarioController(),
 ]);
 
-app.startup().then(()=>{
+app.startup().then(() => {
   require('./sockets')
 });
 

@@ -1,7 +1,13 @@
-// @Author ismael alves
-import { register, Counter, Summary, collectDefaultMetrics} from 'prom-client'
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class utilizada com serviço de envio de emails utilizado globalmente na aplicação
+ * @Callback exportação da instancia da class ServiceEmail
+*/
+
+import { register, Counter, Summary, collectDefaultMetrics } from 'prom-client'
 import ResponseTime from 'response-time'
-import { Application, NextFunction, RequestHandler, Request, Response } from 'express'
+import { Application, NextFunction, Request, Response } from 'express'
 
 const excludeUrl = [
     '/',
@@ -16,7 +22,7 @@ const numOfRequests = new Counter({
     labelNames: ['method']
 })
 
-const pathsTaken = new Counter({  
+const pathsTaken = new Counter({
     name: 'pathsTaken',
     help: 'Caminhos percorridos na aplicação',
     labelNames: ['path']
@@ -28,43 +34,43 @@ const numOfUsersOn = new Summary({
     labelNames: ['num']
 })
 
-const responses = new Summary({  
+const responses = new Summary({
     name: 'responses',
     help: 'Tempo de resposta em milis',
     labelNames: ['method', 'path', 'statusCode']
 })
 
-const responseCounters = ResponseTime((req, res, time) =>{  
-    if( req.method && req.url && !excludeUrl.includes(req.url)) {
+const responseCounters = ResponseTime((req, res, time) => {
+    if (req.method && req.url && !excludeUrl.includes(req.url)) {
         responses.labels(req.method, req.url, res.statusCode.toString()).observe(time);
     }
 })
 
-function requestCounters(req: Request, res: Response, next:NextFunction){
-    if(!excludeUrl.includes(req.url)) {
+function requestCounters(req: Request, res: Response, next: NextFunction) {
+    if (!excludeUrl.includes(req.url)) {
         numOfRequests.inc({ method: req.method });
         pathsTaken.inc({ path: req.url });
     }
     next();
 }
 
-function startCollection(){
+function startCollection() {
     collectDefaultMetrics()
 }
 
-function injectMetricsRoute (App: Application){
+function injectMetricsRoute(App: Application) {
     App.get('/metrics', (req, res) => {
         res.set('Content-Type', register.contentType);
         res.end(register.metrics());
     });
 }
 
-export { 
-    numOfRequests, 
-    pathsTaken, 
-    responses, 
+export {
+    numOfRequests,
+    pathsTaken,
+    responses,
     responseCounters,
     requestCounters,
     startCollection,
-    injectMetricsRoute 
+    injectMetricsRoute
 } // exporta somente o necessário

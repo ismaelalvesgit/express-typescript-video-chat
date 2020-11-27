@@ -27,6 +27,8 @@ import assignResquestMiddleware from '@middlewares/assignResquestMiddleware'
 import handlerErroMiddleware from '@middlewares/handlerErroMiddleware'
 import socketIO from 'socket.io'
 import Usuario from '@models/usuario';
+import swaggerUi from 'swagger-ui-express'
+import swaggerJsdoc from 'swagger-jsdoc'
 
 class App {
 
@@ -160,6 +162,19 @@ class App {
         this.app.use(assignResquestMiddleware)
         this.app.use(responseCounters)
         this.app.use(requestCounters)
+        this.app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc({
+            apis: ['./docs/*.yml', './docs/*.js'],
+            swaggerDefinition: {
+                openapi: "3.0.0",
+                info: {
+                    title: "Express Video Chat API",
+                    version: "0.0.1",
+                    description: "API criada para teste de habilidade na ferramenta",
+                },
+                basePath: '/',
+                host: env.server.url,
+            }
+        })))
         if(env.enviroment != "development" || "test"){
             this.app.use(throttlingResquestMiddleware)
         }

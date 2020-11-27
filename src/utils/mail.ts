@@ -1,3 +1,10 @@
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class utilizada com serviço de envio de emails utilizado globalmente na aplicação
+ * @Callback exportação da instancia da class ServiceEmail
+*/
+
 import nodemailer from 'nodemailer'
 import { google } from 'googleapis'
 import ejs from 'ejs'
@@ -6,11 +13,10 @@ import env from '@config/env'
 import Mail from 'nodemailer/lib/mailer'
 import { Request } from 'express'
 
-
-// camada de transporte
+// Camada de transporte
 let transport: Mail
 try {
-    switch (env.email.enviroment){
+    switch (env.email.enviroment) {
         case 'OAuth2':
             const oauth2Client = new google.auth.OAuth2(
                 env.email.OAuth2.clientId,
@@ -21,10 +27,10 @@ try {
                 refresh_token: env.email.OAuth2.refreshToken,
             })
             oauth2Client.getAccessToken().then((accessToken) => {
-                if(accessToken.token){
+                if (accessToken.token) {
                     transport = nodemailer.createTransport({
                         service: "gmail",
-                        auth:{
+                        auth: {
                             type: "OAuth2",
                             user: env.email.notificator,
                             clientId: env.email.OAuth2.clientId,
@@ -36,7 +42,7 @@ try {
                 }
             })
             break;
-        case 'SMTP':    
+        case 'SMTP':
             transport = nodemailer.createTransport({
                 host: env.email.host,
                 auth: {
@@ -50,26 +56,26 @@ try {
     console.log(error)
 }
 
-class ServiceEmail{
-    
-    forceBruteAcesso(req:Request){
+class ServiceEmail {
+
+    forceBruteAcesso(req: Request) {
         console.log(req)
     }
 
-    bemVindo(user:Usuario){
+    bemVindo(user: Usuario) {
         return this.send(user.email, "bem-vindo", "bem-vindo", user)
     }
 
-    resetSenha(user:Usuario){
+    resetSenha(user: Usuario) {
         return this.send(user.email, "reset senha", "reset-senha", user)
     }
 
-    async notificacaoErro(error:any, user:Usuario, idReq:string){
+    async notificacaoErro(error: any, user: Usuario, idReq: string) {
         let email = Math.floor(Math.random() * 2) + 1 == 1 ? env.email.admin1 : env.email.admin2
         let data
-        if(user){
-            return await Usuario.findOne({where: {id: user.id}}).then( async(doc)=>{
-                if(doc){
+        if (user) {
+            return await Usuario.findOne({ where: { id: user.id } }).then(async (doc) => {
+                if (doc) {
                     doc.senha = undefined
                     data = {
                         id: idReq,
@@ -78,8 +84,8 @@ class ServiceEmail{
                     }
                     return await this.send(email, "Erro Events", "error", data)
                 }
-            }) 
-        }else{
+            })
+        } else {
             data = {
                 id: idReq,
                 error: error,
@@ -89,11 +95,11 @@ class ServiceEmail{
         }
     }
 
-    send(destinatario:string, subject:string, template:string, data:any, files?:any){
-        return new Promise((resolve, reject)=>{
-            ejs.renderFile('./src/views/mail/'+template+'.ejs', data, function(err, html){
-                if(err){
-                    reject({name:'email', mensagem: err})
+    send(destinatario: string, subject: string, template: string, data: any, files?: any) {
+        return new Promise((resolve, reject) => {
+            ejs.renderFile('./src/views/mail/' + template + '.ejs', data, function (err, html) {
+                if (err) {
+                    reject({ name: 'email', mensagem: err })
                 }
                 transport.sendMail({
                     to: destinatario,
@@ -101,9 +107,9 @@ class ServiceEmail{
                     subject: subject,
                     html: html,
                     attachments: files,
-                }).then(resolve).catch((err:any)=>{
-                   
-                    reject({name:'email', mensagem: err})
+                }).then(resolve).catch((err: any) => {
+
+                    reject({ name: 'email', mensagem: err })
                 })
             })
         })

@@ -1,3 +1,10 @@
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class utilizada com rota da aplicação
+ * @Callback exportação da class SystemController
+*/
+
 import { Router } from 'express';
 import Controller from '@interfaces/controller.Interface';
 import speedTest from 'speedtest-net'
@@ -5,7 +12,7 @@ import mail from '@utils/mail';
 import Usuario from '@models/usuario';
 import { getConnection } from 'typeorm';
 
-class MainController implements Controller{
+class SystemController implements Controller {
   public path = '/system';
   public router = Router();
 
@@ -14,31 +21,31 @@ class MainController implements Controller{
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/healthcheck`, 
-      (req, res, next)=>{
-        let data:any = {
+    this.router.get(`${this.path}/healthcheck`,
+      (req, res, next) => {
+        let data: any = {
           process: process.pid,
           uptime: process.uptime(),
-          dataBase:{
-            status: getConnection().isConnected ? "Connectado": "Fora do ar",
+          dataBase: {
+            status: getConnection().isConnected ? "Connectado" : "Fora do ar",
           }
         }
-        const test = speedTest({acceptLicense: true})
-        test.then((network)=>{
+        const test = speedTest({ acceptLicense: true })
+        test.then((network) => {
           data.server = {
             ping: network.ping,
             download: network.download,
             upload: network.upload
           }
           res.json(data)
-        }).catch((error)=>{
+        }).catch((error) => {
           console.log(error)
           mail.notificacaoErro(JSON.stringify(error), new Usuario(), "")
-          res.status(503).json({nome: "system", mensagem: "serviço indisponivel :("})
-        })   
+          res.status(503).json({ nome: "system", mensagem: "serviço indisponivel :(" })
+        })
       }
     );
   }
 
 }
-export default MainController;
+export default SystemController;

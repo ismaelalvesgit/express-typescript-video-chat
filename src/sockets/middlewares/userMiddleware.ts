@@ -1,27 +1,35 @@
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Function utilizado como middleware para pegar o usuário que está utilizado o socket 
+ * da aplicação
+ * @Callback exportação da function user
+*/
+
 import env from "@config/env"
 import Usuario from "@models/usuario"
 import jsonwebtoken from 'jsonwebtoken'
 
-export default function user (socket:SocketIO.Socket, next:any){
+export default function user(socket: SocketIO.Socket, next: any) {
     const token = socket.handshake.query.authorization
-    if(token !== undefined){
+    if (token !== undefined) {
         try {
-            const decode:any = jsonwebtoken.verify(token, env.security.secret)
-            if(Date.now() >= decode.exp * 1000){
-                return next({name:'Forbidden', mensagem: 'Token está expirado'})
+            const decode: any = jsonwebtoken.verify(token, env.security.secret)
+            if (Date.now() >= decode.exp * 1000) {
+                return next({ name: 'Forbidden', mensagem: 'Token está expirado' })
             }
-            Usuario.findOne({where:{email:decode.valor}}).then((db)=>{
-                if(db != null){
+            Usuario.findOne({ where: { email: decode.valor } }).then((db) => {
+                if (db != null) {
                     socket.user = db //atribuido o usuário a requisição
                     next()
-                }else{
-                    return next({name:'NotFound', mensagem: 'Documento não  encontrado'})
+                } else {
+                    return next({ name: 'NotFound', mensagem: 'Documento não  encontrado' })
                 }
-            }).catch(next)  
+            }).catch(next)
         } catch (error) {
-            return next({name:'Forbidden', mensagem: 'Token inválido ou incorreto'})
+            return next({ name: 'Forbidden', mensagem: 'Token inválido ou incorreto' })
         }
-    }else{
+    } else {
         socket.user = new Usuario()
         return next()
     }

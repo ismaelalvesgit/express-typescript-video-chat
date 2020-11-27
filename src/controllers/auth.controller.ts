@@ -1,3 +1,9 @@
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class utilizada com rota da aplicação
+ * @Callback exportação da class AuthController
+*/
 import { NextFunction, Router, Request, Response } from 'express';
 import Controller from '@interfaces/controller.Interface';
 import { RateLimiterMemory } from 'rate-limiter-flexible'
@@ -41,30 +47,30 @@ class AuthController implements Controller {
   }
 
   private initializeRoutes() {
-    
+
     this.router.post(`${this.path}/email/reset-senha/:rash`,
       (req, res, next) => {
-        Usuario.findOne({where: {reset: req.params.rash}}).then( async(doc)=>{
-          if(doc != null){
+        Usuario.findOne({ where: { reset: req.params.rash } }).then(async (doc) => {
+          if (doc != null) {
             req.body.senha = await utils.encrypt(req.body.senha)
-            Usuario.update({id: doc.id}, {senha: req.body.senha, reset:""}).then(()=>{
-              res.render("reset-senha", {data:null, action:"sucess", url: env.server.url, post: ""})
+            Usuario.update({ id: doc.id }, { senha: req.body.senha, reset: "" }).then(() => {
+              res.render("reset-senha", { data: null, action: "sucess", url: env.server.url, post: "" })
             }).catch(next)
-          }else{
-            res.status(403).render("reset-senha", {data:null, action:"not-found", url: env.server.url, post: ""})
-          } 
+          } else {
+            res.status(403).render("reset-senha", { data: null, action: "not-found", url: env.server.url, post: "" })
+          }
         }).catch(next)
       }
     )
 
     this.router.get(`${this.path}/email/reset-senha/:rash`,
       (req, res, next) => {
-        Usuario.findOne({reset: req.params.rash}).then((doc)=>{
-          try{
+        Usuario.findOne({ reset: req.params.rash }).then((doc) => {
+          try {
             utils.decryptToken(req.params.rash)
-            res.render("reset-senha", {data:doc, action:"alter", url: env.server.url, post: env.server.url + req.originalUrl})
-          }catch(err){
-            res.status(403).render("reset-senha", {data:null, action:"not-found", url: env.server.url, post: ""})
+            res.render("reset-senha", { data: doc, action: "alter", url: env.server.url, post: env.server.url + req.originalUrl })
+          } catch (err) {
+            res.status(403).render("reset-senha", { data: null, action: "not-found", url: env.server.url, post: "" })
           }
         }).catch(next)
       }
@@ -73,7 +79,7 @@ class AuthController implements Controller {
     this.router.post(`${this.path}/email/reset-senha`,
       authValidator.resetSenhaValidator(),
       verifiyHandlerMiddleware,
-      async (req:Request, res:Response, next: NextFunction) => {
+      async (req: Request, res: Response, next: NextFunction) => {
         const data = req.body
         const ipAddr = req.ip
         const resFastByIP = await limiterPorMinutoIPResetSenha.get(ipAddr)
@@ -89,7 +95,7 @@ class AuthController implements Controller {
             mensagem: "limite de Requisição atigido :(, aguarde um tempo e tente novamente :)"
           })
         } else {
-          Usuario.findOne({where: {email: data.email} }).then(async (doc) => {
+          Usuario.findOne({ where: { email: data.email } }).then(async (doc) => {
             try {
               if (doc != null) {
                 const rash = utils.gerarToken(doc.email)
@@ -122,7 +128,7 @@ class AuthController implements Controller {
     this.router.post(`${this.path}/email/login`,
       authValidator.loginValidator(),
       verifiyHandlerMiddleware,
-      async (req:Request, res:Response, next: NextFunction) => {
+      async (req: Request, res: Response, next: NextFunction) => {
         const data = req.body
         const ipAddr = req.ip
         const [resFastByIP, resSlowByIP] = await Promise.all([
@@ -185,4 +191,5 @@ class AuthController implements Controller {
   }
 
 }
+
 export default AuthController;

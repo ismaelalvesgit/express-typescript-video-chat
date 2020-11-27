@@ -1,0 +1,17 @@
+/auth/email/login:
+   post:
+      description: Login por email e senha da aplicação
+      tags: [Auth]
+      produces: 
+         - application/json
+      parameters:
+         - name: senha
+           description: Senha do usuário
+           required: true
+           type: string
+
+      responses: 
+         200: 
+            description: Login
+            shema: 
+               type: object

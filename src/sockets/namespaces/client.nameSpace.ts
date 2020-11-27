@@ -1,22 +1,28 @@
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class utilizada com namespace cliente do socket da aplicação
+ * @Callback Instance class ClientNameSpace 
+*/
+
 import Usuario from '@models/usuario'
 import app from '../../index'
 
-
 class ClientNameSpace {
-    
-   client:SocketIO.Namespace = app.io.of('/')
 
-    connection(socket: SocketIO.Socket){
+    client: SocketIO.Namespace = app.io.of('/')
+
+    connection(socket: SocketIO.Socket) {
 
         this.verificarUsuario(socket.user)
 
         socket.emit('join-room', socket.user)
 
-        socket.on('disconnect', ()=>{
+        socket.on('disconnect', () => {
             this.removerUsuario(socket.user)
         })
 
-        socket.on('answer' , (data)=>{
+        socket.on('answer', (data) => {
             console.log(data)
         })
 
@@ -36,22 +42,22 @@ class ClientNameSpace {
         // })
     }
 
-    private verificarUsuario(usuario:Usuario){
-        if(usuario.id){
-            const index = app.usersSocket.findIndex((u)=> u.id === usuario.id)
-            if(index !== -1){
-                app.usersSocket.splice(index, 1) 
+    private verificarUsuario(usuario: Usuario) {
+        if (usuario.id) {
+            const index = app.usersSocket.findIndex((u) => u.id === usuario.id)
+            if (index !== -1) {
+                app.usersSocket.splice(index, 1)
                 app.usersSocket.push(usuario)
-            }else{
+            } else {
                 app.usersSocket.push(usuario)
             }
         }
     }
 
-    private removerUsuario(usuario:Usuario){
-        const index = app.usersSocket.findIndex((u)=> u.id === usuario.id)
-        if(index !== -1){
-            app.usersSocket.splice(index, 1) 
+    private removerUsuario(usuario: Usuario) {
+        const index = app.usersSocket.findIndex((u) => u.id === usuario.id)
+        if (index !== -1) {
+            app.usersSocket.splice(index, 1)
         }
     }
 

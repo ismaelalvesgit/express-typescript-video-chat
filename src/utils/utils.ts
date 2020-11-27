@@ -1,3 +1,10 @@
+/**
+ * @DateModification 27/01/2020
+ * @Author Ismael Alves
+ * @Description Class utilizada com utilitários do code utilizado globalmente na aplicação
+ * @Callback exportação da instancia da class Utils
+*/
+
 import fs from 'fs';
 import shell from 'shelljs';
 import mv from 'mv'
@@ -9,7 +16,7 @@ import Upload from '@models/upload'
 import Usuario from '@models/usuario';
 
 class Utils {
-  multipleUpload(option:{
+  multipleUpload(option: {
     files: any,
     path: string,
     nameFile: string,
@@ -17,35 +24,35 @@ class Utils {
     model: any,
     limit: number,
     user: Usuario,
-  }):Promise<Array<string>>{
+  }): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
       try {
-        this.defaultFolder(env.files.uploadsPath + option.path) 
+        this.defaultFolder(env.files.uploadsPath + option.path)
         option.limit = option.files.length == undefined ? 1 : option.files.length
-        if(option.limit > 4){
+        if (option.limit > 4) {
           option.limit = 4
         }
-        let urls:Array<string> = [] 
-        for(let i = 0; i < option.limit; i++){
+        let urls: Array<string> = []
+        for (let i = 0; i < option.limit; i++) {
           let extension = ''
           let path_origem = ''
           let name = ''
-          if(option.limit == 1 ){
+          if (option.limit == 1) {
             extension = this.fileExtension(option.files.type.split('/')[1])
             path_origem = option.files.path;
-            name = option.nameFile +'.'+extension;
-          }else{
+            name = option.nameFile + '.' + extension;
+          } else {
             extension = this.fileExtension(option.files[i].type.split('/')[1])
             path_origem = option.files[i].path;
-            name = option.nameFile+i +'.'+extension;
+            name = option.nameFile + i + '.' + extension;
           }
           let path_destino = env.files.uploadsPath + option.path + name;
-          mv(path_origem, path_destino, async function(error){  
-            if(!error){
+          mv(path_origem, path_destino, async function (error) {
+            if (!error) {
               urls.push(env.files.uploadsUrl + option.path + name)
-              Upload.find({where: {idObjeto: option.idObjeto}}).then((doc)=>{
-                if(doc.length > 0){
-                  Upload.update({idObjeto: option.idObjeto}, {
+              Upload.find({ where: { idObjeto: option.idObjeto } }).then((doc) => {
+                if (doc.length > 0) {
+                  Upload.update({ idObjeto: option.idObjeto }, {
                     model: option.model.name,
                     idObjeto: option.idObjeto,
                     local: path_destino,
@@ -53,12 +60,12 @@ class Utils {
                     extensao: extension,
                     url: env.files.uploadsUrl + option.path + name,
                     usuario: option.user
-                  }).then(()=> {
-                    if(option.limit == urls.length){
+                  }).then(() => {
+                    if (option.limit == urls.length) {
                       resolve(urls)
                     }
                   }).catch(reject)
-                }else{
+                } else {
                   new Upload({
                     model: option.model.name,
                     idObjeto: option.idObjeto,
@@ -67,20 +74,20 @@ class Utils {
                     extensao: extension,
                     url: env.files.uploadsUrl + option.path + name,
                     usuario: option.user
-                  }).save().then(()=>{
-                    if(option.limit == urls.length){
+                  }).save().then(() => {
+                    if (option.limit == urls.length) {
                       resolve(urls)
                     }
                   }).catch(reject)
                 }
               }).catch(reject)
-            }else{
-              reject({name: "upload", message: error})
+            } else {
+              reject({ name: "upload", message: error })
             }
           })
         }
       } catch (error) {
-        reject({name: "upload", message: error})
+        reject({ name: "upload", message: error })
       }
     })
   }
@@ -103,9 +110,9 @@ class Utils {
         let path_destino = env.files.uploadsPath + option.path + name;
         mv(path_origem, path_destino, async function (err) {
           if (!err) {
-            Upload.find({where:{idObjeto: option.idObjeto}}).then((doc) => {
+            Upload.find({ where: { idObjeto: option.idObjeto } }).then((doc) => {
               if (doc.length > 0) {
-                Upload.update({idObjeto: option.idObjeto}, {
+                Upload.update({ idObjeto: option.idObjeto }, {
                   usuario: option.user,
                   model: option.model.name,
                   idObjeto: option.idObjeto,
